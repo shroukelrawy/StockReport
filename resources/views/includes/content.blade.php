@@ -193,6 +193,9 @@
     </div>
 </div>
 
+
+
+<!-- ApexChart Script -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var options = {
@@ -203,116 +206,32 @@
             series: [
                 {
                     name: 'Purchases',
-                    data: @json($purchaseData)
+                    data: @json($purchaseData) 
                 },
                 {
                     name: 'Sales',
-                    data: @json($salesData)
+                    data: @json($salesData) 
                 },
                 {
                     name: 'Returns',
-                    data: @json($returnsData)
+                    data: @json($returnsData) 
                 }
             ],
             xaxis: {
-                categories: @json($dateLabels),
+                categories: @json($dateLabels), 
                 title: { text: 'Date' }
             },
-            yaxis: { title: { text: 'Quantity' } }
+            yaxis: {
+                title: { text: 'Quantity' }
+            },
+            colors: ['#008FFB', '#00E396', '#FF4560'],
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth' }
         };
-       
 
         var chart = new ApexCharts(document.querySelector("#stockTrendsChart"), options);
         chart.render();
     });
-</script>
-
-<div class="col-md-6 col-lg-4 order-1 mb-6">
-  <div class="card h-100">
-    <div class="card-header nav-align-top">
-      <ul class="nav nav-pills" role="tablist">
-        <li class="nav-item">
-          <button
-            type="button"
-            class="nav-link active"
-            role="tab"
-            data-bs-toggle="tab"
-            data-bs-target="#navs-tabs-line-card-stock"
-            aria-controls="navs-tabs-line-card-stock"
-            aria-selected="true">
-            Stock Trends
-          </button>
-        </li>
-      </ul>
-    </div>
-    
-    <div class="card-body">
-      <div class="tab-content p-0">
-        <div class="tab-pane fade show active" id="navs-tabs-line-card-stock" role="tabpanel">
-          <div class="d-flex mb-6">
-            <div class="avatar flex-shrink-0 me-3">
-              <img src="{{asset('assets/img/icons/unicons/chart.png')}}" alt="Trends" />
-            </div>
-            <div>
-              <p class="mb-0">Stock Trends</p>
-              <div class="d-flex align-items-center">
-                <h6 class="mb-0 me-1">Monthly Overview</h6>
-              </div>
-            </div>
-          </div>
-
-          <!-- ApexChart for Stock Trends -->
-          <div id="stockTrendsChart"></div>
-          
-          <div class="d-flex align-items-center justify-content-center mt-6 gap-3">
-            <div>
-              <h6 class="mb-0">Data over past months</h6>
-              <small>Track purchases, sales, and returns</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ApexChart Script -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var options = {
-      chart: {
-        type: 'line',
-        height: 350
-      },
-      series: [
-        {
-          name: 'Purchases',
-          data: @json($purchaseData)
-        },
-        {
-          name: 'Sales',
-          data: @json($salesData)
-        },
-        {
-          name: 'Returns',
-          data: @json($returnsData)
-        }
-      ],
-      xaxis: {
-        categories: @json($dateLabels),
-        title: { text: 'Date' }
-      },
-      yaxis: {
-        title: { text: 'Quantity' }
-      },
-      colors: ['#008FFB', '#00E396', '#FF4560'],
-      dataLabels: { enabled: false },
-      stroke: { curve: 'smooth' }
-    };
-
-    var chart = new ApexCharts(document.querySelector("#stockTrendsChart"), options);
-    chart.render();
-  });
 </script>
 
                 </div>

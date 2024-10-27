@@ -71,9 +71,9 @@
             @include('includes.content')
            
                 <!-- Total Revenue -->
-                @include('includes.totalrevenue')
+                <!-- @include('includes.totalrevenue') -->
                 <!--/ Total Revenue -->
-                <div class="col-12 col-md-8 col-lg-12 col-xxl-4 order-3 order-md-2">
+                <!-- <div class="col-12 col-md-8 col-lg-12 col-xxl-4 order-3 order-md-2">
                   <div class="row">
                     <div class="col-6 mb-6">
                       <div class="card h-100">
@@ -156,18 +156,18 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="row">
                 <!-- Order Statistics -->
-                @include('includes.order')
+                <!-- @include('includes.order') -->
                 <!--/ Order Statistics -->
 
                 <!-- Expense Overview -->
-                @include('includes.expense')
+                <!-- @include('includes.expense') -->
                 <!--/ Expense Overview -->
 
                 <!-- Transactions -->
-                @include('includes.transaction')
+                <!-- @include('includes.transaction') -->
                 <!--/ Transactions -->
               </div>
             </div>

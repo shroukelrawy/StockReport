@@ -13,6 +13,13 @@ class ReportController extends Controller
 {
     public function index()
     {
+        // بيانات افتراضية
+    // $purchaseData = [10, 20, 30, 40, 50]; // بيانات المشتريات
+    // $salesData = [5, 15, 25, 35, 45]; // بيانات المبيعات
+    // $returnsData = [2, 3, 1, 4, 2]; // بيانات الإرجاع
+    // $dateLabels = ['January', 'February', 'March', 'April', 'May']; // تسميات الأشهر
+        
+    
         // إجمالي المخزون الحالي
         $currentStock = Product::sum('stock');
         
