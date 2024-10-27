@@ -13,21 +13,22 @@ class ReportController extends Controller
 {
     public function index()
     {
+        // إجمالي المخزون الحالي
         $currentStock = Product::sum('stock');
         
-        // Total purchases
+        // إجمالي المشتريات
         $totalPurchases = Transaction::where('type', 'purchase')->sum('amount');
         
-        // Current and previous month's sales data
+        // إجمالي المبيعات للشهر الحالي والشهر السابق
         $totalSales = Transaction::where('type', 'sell')->whereMonth('created_at', Carbon::now()->month)->sum('amount');
         $previousMonthSales = Transaction::where('type', 'sell')->whereMonth('created_at', Carbon::now()->subMonth()->month)->sum('amount');
         
-        // Calculate percentage change for total sales
+        // حساب نسبة التغير في المبيعات
         $salesPercentageChange = $previousMonthSales > 0 
             ? (($totalSales - $previousMonthSales) / $previousMonthSales) * 100 
             : 0;
     
-        // Previous month purchases
+        // إجمالي المشتريات للشهر السابق
         $previousMonthPurchases = Transaction::where('type', 'purchase')
             ->whereBetween('created_at', [
                 Carbon::now()->subMonth()->startOfMonth(),
@@ -35,25 +36,28 @@ class ReportController extends Controller
             ])
             ->sum('amount');
     
-        // Calculate the percentage change for purchases
+        // حساب نسبة التغير في المشتريات
         $purchasesPercentageChange = $previousMonthPurchases > 0 
             ? (($totalPurchases - $previousMonthPurchases) / $previousMonthPurchases) * 100 
             : 0;
     
-        // Other necessary data
+        // المخزون للشهر السابق
         $previousPurchases = Transaction::where('type', 'purchase')->where('created_at', '<', Carbon::now()->startOfMonth())->sum('amount');
         $previousSales = Transaction::where('type', 'sell')->where('created_at', '<', Carbon::now()->startOfMonth())->sum('amount');
         $previousStock = $previousPurchases - $previousSales;
         $percentageChange = $previousStock > 0 ? (($currentStock - $previousStock) / $previousStock) * 100 : 0;
     
-        // Get transaction details
+        // تفاصيل المعاملات
         $transactionDetails = Transaction::with('product')->get();
     
-        // Data for charts
+        // بيانات الرسم البياني
         $dateLabels = Transaction::selectRaw('DATE(created_at) as date')
             ->groupBy('date')
             ->orderBy('date')
-            ->pluck('date')->toArray();
+            ->get()
+            ->pluck('date')
+            ->map(fn($date) => Carbon::parse($date)->format('d-m-Y'))
+            ->toArray();
     
         $purchaseData = Transaction::where('type', 'purchase')
             ->selectRaw('SUM(quantity) as quantity, DATE(created_at) as date')
@@ -69,14 +73,19 @@ class ReportController extends Controller
             ->pluck('quantity')
             ->toArray();
     
-        $returnsData = Transaction::where('type', 'return')
+        $returnsData = Transaction::whereIn('type', ['sell_return', 'purchase_return'])
             ->selectRaw('SUM(quantity) as quantity, DATE(created_at) as date')
             ->groupBy('date')
             ->orderBy('date')
             ->pluck('quantity')
             ->toArray();
+        
+        // ضبط البيانات لتوافق جميع التواريخ
+        $purchaseData = $this->matchDataWithLabels($dateLabels, $purchaseData);
+        $salesData = $this->matchDataWithLabels($dateLabels, $salesData);
+        $returnsData = $this->matchDataWithLabels($dateLabels, $returnsData);
     
-        // Pass all calculated data to the view
+        // تمرير جميع البيانات للعرض
         return view('reports.stock', compact(
             'currentStock', 
             'previousStock', 
